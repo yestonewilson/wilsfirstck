@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>jQuery-Ajax加载接口图片+瀑布流 测试</title>
+  <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.6.0/jquery.min.js"
+    type="text/javascript"></script>
+  <style type="text/css">
+    body {
+      background-color: #2B2B2B
+    }
+
+    #main {
+      width: 1280px;
+      min-height: 100px;
+      margin: 0 auto;
+    }
+
+    .imgbox {
+      width: 300px;
+      min-height: 100px;
+      float: left;
+      margin: 0 20px 0 0;
+    }
+
+    .liImage {
+      width: 300px;
+      overflow: hidden;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      background: #FFF;
+    }
+
+    .liImage img {
+      display: block;
+      width: 100%;
+    }
+
+    .liImage span {
+      display: block;
+      margin: 10px;
+      font: lighter 12px Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, "sans-serif";
+    }
+  </style>
+</head>
+
+<body>
+  <span style="display:block;color:#FFF;width:200px; text-align:center;margin:50px auto">点击图片加载新图</span>
+  <div id="main" scs="0">
+    <div class="imgbox"></div>
+    <div class="imgbox"></div>
+    <div class="imgbox"></div>
+    <div class="imgbox"></div>
+  </div>
+  <script>
+    $(function () {
+
+      reloadImg($(".imgbox:first"));
+      //setImage($("#imgbox").attr("imgurl"));
+
+      $("#main").click(function () {
+
+        let scs = $(this).attr("scs");
+
+        if (scs != "0") { //防止点击太快，先判断上一次点击请求是否已经执行完，1完成，0未完成
+          //找到高度最小的容器
+          var minHeightElement = null;
+          let minHeight = Number.MAX_VALUE;//先给个最大值
+          $(".imgbox").each(function () {//遍历.imgbox找到高度最低那个
+            let height = $(this).height();
+            if (height < minHeight) {
+              minHeight = height;//如果this的高度小于上一个遍历元素的高度，则保存当前高度为最小高度
+              minHeightElement = $(this);//并指定为当前的最小高度容器
+            }
+          });
+
+          reloadImg(minHeightElement);
+
+          //console.log(scs);
+        }
+      });
+
+
+
+      //加载图片
+      function reloadImg(minHeightElement) {
+
+        $("#main").attr("scs", 0); //初始化执行完成状态的属性标识为未完成：0
+
+        let mHElement = minHeightElement;
+        //console.log(mHElement);
+
+
+
+        //三个method值随机选择
+        let options = ["mobile", "pc", "zsy"];//三个用于随机选择的值
+        let rd = Math.random();//生成一个0-1的随机数
+        let choice = options[Math.floor(rd * options.length)];//随机数x随机值的个数，并用floor向下取整，得到随机数就是0、1、2
+
+
+
+        // 要发送的参数
+        var requestData = {
+          format: 'json',
+          method: choice,
+          lx: "fengjing"
+        };
+
+
+
+        // 使用 jQuery.ajax 发送 GET 请求
+        $.ajax({
+
+          url: 'https://api.btstu.cn/sjbz/api.php',
+          type: 'GET',
+          data: requestData,
+          success: function (response) {
+            // 请求成功时将响应数据输出到页面
+            //console.log(response);
+            //var imageUrl = response.imgurl;
+            // TODO: 输出到页面中
+            mHElement.append("<div class=\"liImage\"><img height=\"" + Math.floor(mHElement.width() / response.width * response.height) + "\" src=\"" + response.imgurl + "\" /><span>图片链接：" + response.imgurl + "<br>宽度：" + response.width + "<br>高度：" + response.height + "</span></div>");
+            $("#main").attr("scs", 1);//通过保存一个属性表示执行完成的标识1
+          },
+          error: function (xhr, status, error) {
+            // 请求失败时输出错误信息
+            console.error('Request failed, status: ' + status + ', error: ' + error);
+          }
+
+        });
+      }//end reloadImg()
+
+    });
+
+
+  </script>
+</body>
+
+</html>
