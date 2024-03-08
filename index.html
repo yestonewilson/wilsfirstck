@@ -7,22 +7,11 @@
   <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.6.0/jquery.min.js"
     type="text/javascript"></script>
   <style type="text/css">
-    body {
-      background-color: #2B2B2B
-    }
+    body {background-color: #2B2B2B}
 
-    #main {
-      width: 1280px;
-      min-height: 100px;
-      margin: 0 auto;
-    }
+    #main {width: 1280px;min-height: 100px;margin: 0 auto;}
 
-    .imgbox {
-      width: 300px;
-      min-height: 100px;
-      float: left;
-      margin: 0 20px 0 0;
-    }
+    .imgbox {width: 300px;min-height: 100px;float: left;margin: 0 20px 0 0;}
 
     .liImage {
       width: 300px;
@@ -74,31 +63,21 @@
               minHeightElement = $(this);//并指定为当前的最小高度容器
             }
           });
-
           reloadImg(minHeightElement);
-
           //console.log(scs);
         }
       });
 
-
-
       //加载图片
       function reloadImg(minHeightElement) {
-
         $("#main").attr("scs", 0); //初始化执行完成状态的属性标识为未完成：0
-
         let mHElement = minHeightElement;
         //console.log(mHElement);
-
-
 
         //三个method值随机选择
         let options = ["mobile", "pc", "zsy"];//三个用于随机选择的值
         let rd = Math.random();//生成一个0-1的随机数
         let choice = options[Math.floor(rd * options.length)];//随机数x随机值的个数，并用floor向下取整，得到随机数就是0、1、2
-
-
 
         // 要发送的参数
         var requestData = {
@@ -107,11 +86,8 @@
           lx: "fengjing"
         };
 
-
-
         // 使用 jQuery.ajax 发送 GET 请求
         $.ajax({
-
           url: 'https://api.btstu.cn/sjbz/api.php',
           type: 'GET',
           data: requestData,
@@ -127,14 +103,9 @@
             // 请求失败时输出错误信息
             console.error('Request failed, status: ' + status + ', error: ' + error);
           }
-
         });
       }//end reloadImg()
-
     });
-
-
   </script>
 </body>
-
 </html>
